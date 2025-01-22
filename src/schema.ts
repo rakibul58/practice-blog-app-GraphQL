@@ -18,6 +18,11 @@ const typeDefs = `#graphql
             email: String!,
             password: String!,
       ): UserToken
+
+      addPost(
+            title: String!,
+            content: String!,
+      ): PostPayload
   }
 
   type UserToken {
@@ -31,6 +36,11 @@ const typeDefs = `#graphql
         author: User
         published: Boolean!
         createdAt: String!
+  }
+
+  type PostPayload {
+        UserError: String
+        post: Post
   }
 
  type User {

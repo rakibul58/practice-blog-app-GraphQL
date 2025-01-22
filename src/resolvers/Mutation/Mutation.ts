@@ -13,6 +13,11 @@ interface SigninInfo {
   password: string;
 }
 
+interface PostInput {
+  title: string;
+  content: string;
+}
+
 export const Mutation = {
   signup: async (parent: any, args: UserInfo, { prisma }: any) => {
     const { name, email, password } = args;
@@ -58,5 +63,19 @@ export const Mutation = {
     }
     const token = createToken(user.id);
     return { token };
+  },
+
+  addPost: async (parent: any, args: PostInput, { prisma, userInfo }: any) => {
+    if (!userInfo) {
+      return { UserError: "Unauthorized", post: null };
+    }
+    const { title, content } = args;
+    if (!title || !content) {
+      return { UserError: "Title and content are required", post: null };
+    }
+    const post = await prisma.post.create({
+      data: { title, content, authorId: userInfo.userId },
+    });
+    return { post };
   },
 };
